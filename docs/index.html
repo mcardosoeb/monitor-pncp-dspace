@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monitor PNCP x DSPACE</title>
+<style>
+  :root {
+    --bg: #f6f7f4; --card: #ffffff; --text: #1d211b; --muted: #5f665a;
+    --line: #dfe3da; --accent: #4b5d2e; --ok: #2f7d32; --bad: #b42318; --warn: #a15c07;
+    --okbg: #e8f3e8; --badbg: #fdecea;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141712; --card: #1d211b; --text: #e6e9e2; --muted: #a2a99c;
+      --line: #30362c; --accent: #a9bf7c; --ok: #7cc47f; --bad: #f2867a; --warn: #e2b05a;
+      --okbg: #1f3320; --badbg: #3a1f1c;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; color: var(--accent); }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .sub a { color: inherit; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .card .lbl { color: var(--muted); font-size: 13px; }
+  .card .val { font-size: 28px; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .card.bad .val { color: var(--bad); } .card.ok .val { color: var(--ok); }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+  h2 { font-size: 16px; margin: 0 0 12px; }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 13px; white-space: nowrap; }
+  td.n { text-align: right; } th.n { text-align: right; }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .pill.ok { background: var(--okbg); color: var(--ok); }
+  .pill.bad { background: var(--badbg); color: var(--bad); }
+  .pill.warn { background: var(--badbg); color: var(--warn); }
+  details summary { cursor: pointer; color: var(--accent); }
+  details ul { margin: 6px 0 0; padding-left: 18px; }
+  a { color: var(--accent); }
+  .empty { color: var(--muted); padding: 12px 0; }
+  .filtro { margin-bottom: 10px; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Monitor PNCP x DSPACE</h1>
+  <p class="sub" id="sub">Carregando…</p>
+
+  <div class="cards" id="cards"></div>
+
+  <section id="faltaSec">
+    <h2>Processos na falta na última consulta</h2>
+    <div class="scroll" id="falta"></div>
+  </section>
+
+  <section>
+    <h2>Histórico de consultas</h2>
+    <label class="filtro"><input type="checkbox" id="soFalta"> Mostrar só consultas com falta ou erro</label>
+    <div class="scroll" id="hist"></div>
+  </section>
+</main>
+
+<script src="historico.js"></script>
+<script>
+  const PAINEL = "https://datastudio.google.com/u/0/reporting/71a1b697-4dd9-428d-ba8c-c2f02491324a/page/p_n01n3pu72d";
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const hist = (window.HISTORICO || []).slice().reverse();
+
+  function render() {
+    const ult = hist[0];
+    const sub = document.getElementById("sub");
+    if (!ult) {
+      sub.textContent = "Nenhuma consulta registrada ainda.";
+      document.getElementById("faltaSec").hidden = true;
+      return;
+    }
+    sub.innerHTML = `${esc(ult.om)} · última consulta em ${esc(ult.data_hora_fmt)}` +
+      (ult.atualizacao_painel ? ` · dados do painel de ${esc(ult.atualizacao_painel)}` : "") +
+      ` · <a href="${PAINEL}" target="_blank" rel="noopener">abrir painel</a>`;
+
+    const okUlt = hist.find(h => !h.erro) || {};
+    const cards = [
+      ["Processos da OM", okUlt.total_processos ?? "–", ""],
+      ["Publicados no PNCP", okUlt.publicados_pncp ?? "–", ""],
+      ["Encontrados no DSPACE", okUlt.no_dspace ?? "–", ""],
+      ["Na falta", okUlt.qtd_falta ?? "–", okUlt.qtd_falta > 0 ? "bad" : "ok"],
+      ["Consultas registradas", hist.length, ""],
+    ];
+    document.getElementById("cards").innerHTML = cards.map(([l, v, c]) =>
+      `<div class="card ${c}"><div class="lbl">${l}</div><div class="val">${esc(v)}</div></div>`).join("");
+
+    const falta = okUlt.falta || [];
+    document.getElementById("falta").innerHTML = falta.length
+      ? `<table><thead><tr><th>#</th><th>Modalidade</th><th>Título no PNCP</th><th>Link</th></tr></thead><tbody>` +
+        falta.map((p, i) => `<tr><td>${i + 1}</td><td>${esc(p.modalidade)}</td><td>${esc(p.titulo)}</td>
+          <td><a href="${esc(p.link_pncp)}" target="_blank" rel="noopener">PNCP</a></td></tr>`).join("") +
+        `</tbody></table>`
+      : `<p class="empty">Nenhum processo na falta. Tudo encontrado no DSPACE.</p>`;
+
+    renderHist();
+  }
+
+  function renderHist() {
+    const so = document.getElementById("soFalta").checked;
+    const rows = hist.filter(h => !so || h.erro || h.qtd_falta > 0);
+    document.getElementById("hist").innerHTML = rows.length ? `<table><thead><tr>
+        <th>Data/hora</th><th class="n">Processos</th><th class="n">PNCP</th><th class="n">DSPACE</th>
+        <th class="n">%</th><th>Situação</th><th>E-mail</th><th>Detalhes</th></tr></thead><tbody>` +
+      rows.map(h => {
+        const sit = h.erro ? `<span class="pill warn">Erro</span>`
+          : h.qtd_falta > 0 ? `<span class="pill bad">${h.qtd_falta} na falta</span>`
+          : `<span class="pill ok">OK</span>`;
+        const det = h.erro ? esc(h.erro)
+          : (h.falta || []).length ? `<details><summary>ver processos</summary><ul>` +
+              h.falta.map(p => `<li><a href="${esc(p.link_pncp)}" target="_blank" rel="noopener">${esc(p.titulo)}</a></li>`).join("") +
+            `</ul></details>` : "";
+        return `<tr><td>${esc(h.data_hora_fmt)}</td><td class="n">${esc(h.total_processos ?? "–")}</td>
+          <td class="n">${esc(h.publicados_pncp ?? "–")}</td><td class="n">${esc(h.no_dspace ?? "–")}</td>
+          <td class="n">${esc(h.percentual ?? "–")}</td><td>${sit}</td>
+          <td>${h.email_enviado ? "Enviado" : (h.qtd_falta > 0 || h.erro ? "Não enviado" : "–")}</td><td>${det}</td></tr>`;
+      }).join("") + `</tbody></table>` : `<p class="empty">Nenhuma consulta para mostrar.</p>`;
+  }
+
+  document.getElementById("soFalta").addEventListener("change", renderHist);
+  render();
+</script>
+</body>
+</html>
