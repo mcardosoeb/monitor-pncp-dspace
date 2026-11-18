@@ -64,5 +64,44 @@
     "atualizacao_painel": "17/11/2026 16:55:48",
     "erro": null,
     "email_enviado": true
+  },
+  {
+    "data_hora": "2026-11-18T11:52:14-03:00",
+    "data_hora_fmt": "18/11/2026 11:52",
+    "om": "15ª Cia Inf Mtz",
+    "publicados_pncp": 34,
+    "no_dspace": 30,
+    "percentual": "88,2%",
+    "total_processos": 34,
+    "qtd_falta": 4,
+    "falta": [
+      {
+        "modalidade": "INEXIGIBILIDADE",
+        "titulo": "Ato que autoriza a Contratação Direta, 69/2026, Inexigibilidade, 160227, 15ª COMPANHIA DE INFANTARIA MECANIZADO",
+        "link_pncp": "https://pncp.gov.br/app/editais/00394452000103-1-022058/2026",
+        "status": "NÃO ENCONTRADO"
+      },
+      {
+        "modalidade": "INEXIGIBILIDADE",
+        "titulo": "Ato que autoriza a Contratação Direta, 10124/2026, Inexigibilidade, 160227, 15ª COMPANHIA DE INFANTARIA MECANIZADO",
+        "link_pncp": "https://pncp.gov.br/app/editais/00394452000103-1-022978/2026",
+        "status": "NÃO ENCONTRADO"
+      },
+      {
+        "modalidade": "INEXIGIBILIDADE",
+        "titulo": "Ato que autoriza a Contratação Direta, 71/2026, Inexigibilidade, 160227, 15ª COMPANHIA DE INFANTARIA MECANIZADO",
+        "link_pncp": "https://pncp.gov.br/app/editais/00394452000103-1-024523/2026",
+        "status": "NÃO ENCONTRADO"
+      },
+      {
+        "modalidade": "INEXIGIBILIDADE",
+        "titulo": "Ato que autoriza a Contratação Direta, 72/2026, Inexigibilidade, 160227, 15ª COMPANHIA DE INFANTARIA MECANIZADO",
+        "link_pncp": "https://pncp.gov.br/app/editais/00394452000103-1-024586/2026",
+        "status": "NÃO ENCONTRADO"
+      }
+    ],
+    "atualizacao_painel": "18/11/2026 11:52:18",
+    "erro": null,
+    "email_enviado": true
   }
 ]
