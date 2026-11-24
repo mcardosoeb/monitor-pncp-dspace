@@ -643,5 +643,26 @@
     "atualizacao_painel": "24/11/2026 11:56:39",
     "erro": null,
     "email_enviado": true
+  },
+  {
+    "data_hora": "2026-11-24T16:55:37-03:00",
+    "data_hora_fmt": "24/11/2026 16:55",
+    "om": "15ª Cia Inf Mtz",
+    "publicados_pncp": 36,
+    "no_dspace": 35,
+    "percentual": "94,6%",
+    "total_processos": 36,
+    "qtd_falta": 1,
+    "falta": [
+      {
+        "modalidade": "DISPENSA",
+        "titulo": "Aviso de Contratação Direta, 74/2026, Dispensa, 160227, 15ª COMPANHIA DE INFANTARIA MECANIZADO",
+        "link_pncp": "https://pncp.gov.br/app/editais/00394452000103-1-025017/2026",
+        "status": "NÃO ENCONTRADO"
+      }
+    ],
+    "atualizacao_painel": "24/11/2026 16:55:42",
+    "erro": null,
+    "email_enviado": true
   }
 ]
