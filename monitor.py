@@ -277,15 +277,11 @@ def main() -> int:
     reg["erro"] = erro
     reg["email_enviado"] = False
     try:
-        if erro:
-            reg["email_enviado"] = enviar_email(
-                f"[PNCP x DSPACE] Falha na consulta de {reg['data_hora_fmt']}",
-                f"<p>Não foi possível ler o painel para <b>{html.escape(OM)}</b>.</p>"
-                f"<p>Erro: <code>{html.escape(erro)}</code></p>"
-                f"<p>Confira manualmente: <a href=\"{URL}\">PNCP x DSPACE 2026</a></p>",
-            )
-        elif reg["qtd_falta"] > 0:
+        # e-mail somente quando houver divergência (processo na falta no DSPACE)
+        if not erro and reg["qtd_falta"] > 0:
             reg["email_enviado"] = enviar_email(*email_falta(reg))
+        else:
+            print("Sem divergência (ou consulta com erro): e-mail não enviado.")
     except Exception as e:  # noqa: BLE001
         print(f"ERRO ao enviar e-mail: {e}")
         reg["erro_email"] = str(e)

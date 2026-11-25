@@ -123,7 +123,7 @@
         return `<tr><td>${esc(h.data_hora_fmt)}</td><td class="n">${esc(h.total_processos ?? "–")}</td>
           <td class="n">${esc(h.publicados_pncp ?? "–")}</td><td class="n">${esc(h.no_dspace ?? "–")}</td>
           <td class="n">${esc(h.percentual ?? "–")}</td><td>${sit}</td>
-          <td>${h.email_enviado ? "Enviado" : (h.qtd_falta > 0 || h.erro ? "Não enviado" : "–")}</td><td>${det}</td></tr>`;
+          <td>${h.email_enviado ? "Enviado" : (h.qtd_falta > 0 && !h.erro ? "Não enviado" : "–")}</td><td>${det}</td></tr>`;
       }).join("") + `</tbody></table>` : `<p class="empty">Nenhuma consulta para mostrar.</p>`;
   }
 

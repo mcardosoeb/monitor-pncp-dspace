@@ -2,9 +2,9 @@ name: Monitor PNCP x DSPACE
 
 on:
   schedule:
-    # Horário de Brasília (UTC-3): 11h00 e 16h00 = 14h00 e 19h00 UTC
-    - cron: "0 14 * * *"
-    - cron: "0 19 * * *"
+    # Segunda a sexta, horário de Brasília (UTC-3): 11h00 e 16h00 = 14h00 e 19h00 UTC
+    - cron: "0 14 * * 1-5"
+    - cron: "0 19 * * 1-5"
   workflow_dispatch: {}   # permite rodar manualmente pela aba Actions
 
 permissions:

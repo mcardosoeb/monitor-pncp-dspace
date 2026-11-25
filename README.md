@@ -1,13 +1,14 @@
 # Monitor PNCP x DSPACE: 15ª Cia Inf Mtz
 
-Todos os dias às **11h00 e 16h00 (Brasília)** o GitHub Actions:
+De **segunda a sexta, às 11h00 e 16h00 (Brasília)**, o GitHub Actions
+(não roda aos sábados e domingos):
 
 1. abre o painel [PNCP x DSPACE 2026](https://datastudio.google.com/u/0/reporting/71a1b697-4dd9-428d-ba8c-c2f02491324a/page/p_n01n3pu72d);
 2. filtra a UGA **15ª Cia Inf Mtz** e lê todos os processos da OM;
 3. separa os que estão **NÃO ENCONTRADO** no DSPACE (na falta);
 4. salva a consulta em `docs/historico.json` (histórico completo);
-5. envia um e-mail para **conf15companhia@gmail.com** quando houver processo na falta
-   (e também se a consulta falhar, para você conferir manualmente).
+5. envia um e-mail para **conf15companhia@gmail.com** **somente quando houver divergência**
+   (processo na falta). Sem divergência, nenhum e-mail é enviado.
 
 O histórico fica visível em `docs/index.html` (página do GitHub Pages).
 
@@ -63,6 +64,8 @@ chega (se houver falta) e o histórico ganha uma linha.
 ## Observações
 - O GitHub pode atrasar disparos agendados em alguns minutos (às vezes até ~30 min).
 - O robô tenta 3 vezes antes de registrar erro. Se o painel mudar de layout, a consulta
-  falha, você recebe o e-mail de falha e a linha aparece como **Erro** no histórico.
+  falha e a linha aparece como **Erro** no histórico. Não há e-mail do robô nesse caso,
+  mas o GitHub avisa o dono do repositório por e-mail quando uma execução falha.
+- O botão **Run workflow** roda a qualquer dia, inclusive no fim de semana (é manual).
 - Rodar no próprio PC: `pip install -r requirements.txt`, `python -m playwright install chromium`,
   defina `GMAIL_USER` e `GMAIL_APP_PASSWORD` no ambiente e rode `python monitor.py`.
