@@ -18,6 +18,7 @@ O histórico fica visível em `docs/index.html` (página do GitHub Pages).
 |---|---|
 | `monitor.py` | Raspagem do painel, histórico e e-mail |
 | `.github/workflows/monitor.yml` | Agendamento 11h/16h na nuvem |
+| `.github/workflows/pages.yml` | Publica a página do histórico no GitHub Pages |
 | `docs/index.html` | Página com última consulta e histórico |
 | `docs/historico.json` / `historico.js` | Dados de todas as consultas (atualizados pelo robô) |
 
@@ -54,7 +55,8 @@ e `OM_NOME` (para monitorar outra UGA, com o nome exatamente como aparece no pai
 
 ### 4. Permissão de escrita e página do histórico
 - **Settings → Actions → General → Workflow permissions** → marque *Read and write permissions*.
-- **Settings → Pages** → *Deploy from a branch* → branch `main`, pasta `/docs`.
+- **Settings → Pages** → *Build and deployment* → *Source*: **GitHub Actions**.
+  O workflow `pages.yml` publica a pasta `docs/` após cada consulta.
   A página fica em `https://SEU_USUARIO.github.io/monitor-pncp-dspace/`.
 
 ### 5. Teste
